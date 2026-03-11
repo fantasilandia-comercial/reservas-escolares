@@ -52,11 +52,11 @@
             <div class="section-title">1. Identificación del Colegio (Busque por RBD, RUT o Ubicación)</div>
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label">RBD</label>
+                    <label class="form-label">RBD (Sin dígito verificador)</label>
                     <input type="text" id="rbdInput" class="form-control" placeholder="Ej: 1">
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">RUT Sostenedor</label>
+                    <label class="form-label">RUT Sostenedor (Sin puntos ni dígito verificador)</label>
                     <input type="text" id="rutInput" class="form-control" placeholder="Ej: 69010100">
                 </div>
             </div>
@@ -76,7 +76,6 @@
                 </div>
             </div>
 
-            <!-- School name selection on its own row -->
             <div class="row g-3 mt-1">
                 <div class="col-md-12">
                     <label class="form-label">Buscar y Seleccionar Establecimiento</label>
@@ -90,7 +89,7 @@
                 </div>
             </div>
 
-            <!-- Part 2: Contact -->
+            <!-- Part 2: Contacto -->
             <div class="section-title">2. Información de Contacto</div>
             <div class="row g-3">
                 <div class="col-md-4">
@@ -119,7 +118,7 @@
                 <div class="col-md-4">
                     <label class="form-label">Teléfono 2</label>
                     <input type="tel" id="contactPhone2" class="form-control" 
-                           pattern="^(\+569|9)[0-9]{8}$" placeholder="+569...">
+                           pattern="^(\+569|9)[0-9]{8}$" placeholder="+56912345678">
                 </div>
             </div>
 
