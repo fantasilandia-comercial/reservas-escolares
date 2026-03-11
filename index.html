@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva Escolar - Fantasilandia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .booking-card { max-width: 750px; margin: 40px auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: white; border-top: 8px solid #ed1c24; }
+        .logo-area { text-align: center; margin-bottom: 25px; }
+        .form-label { font-weight: 600; color: #333; }
+        .readonly-field { background-color: #e9ecef !important; border-color: #dee2e6; color: #495057; }
+        .btn-primary { background-color: #ed1c24; border: none; font-weight: bold; padding: 12px; }
+        .btn-primary:hover { background-color: #c41219; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="booking-card">
+        <div class="logo-area">
+            <h2>🎡 Registro de Visita Escolar</h2>
+            <p class="text-muted">Busque su colegio por RBD para comenzar</p>
+        </div>
+
+        <form id="bookingForm">
+            <!-- RBD Lookup Section -->
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">RBD</label>
+                    <input type="text" id="rbdInput" class="form-control" placeholder="Ej: 1" required>
+                    <div id="rbdFeedback" class="invalid-feedback">Colegio no encontrado</div>
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label">Nombre del Establecimiento</label>
+                    <input type="text" id="schoolName" class="form-control readonly-field" readonly placeholder="Se autocompleta al ingresar RBD">
+                </div>
+            </div>
+
+            <!-- Geography Section -->
+            <div class="row g-3 mt-1">
+                <div class="col-md-6">
+                    <label class="form-label">Región</label>
+                    <input type="text" id="regionName" class="form-control readonly-field" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Comuna</label>
+                    <input type="text" id="comunaName" class="form-control readonly-field" readonly>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Personal Data -->
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Profesor / Encargado</label>
+                    <input type="text" id="contactName" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Correo Electrónico</label>
+                    <input type="email" id="contactEmail" class="form-control" required>
+                </div>
+            </div>
+
+            <!-- Booking Details -->
+            <div class="row g-3 mt-1">
+                <div class="col-md-4">
+                    <label class="form-label">Fecha de Visita</label>
+                    <input type="date" id="visitDate" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">N° de Alumnos</label>
+                    <input type="number" id="kidsCount" class="form-control" required min="10">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Tipo de Producto</label>
+                    <select id="productType" class="form-select">
+                        <option value="Entrada Simple">Entrada Simple</option>
+                        <option value="Entrada + Almuerzo">Entrada + Almuerzo</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-4 shadow-sm">Enviar Solicitud de Reserva</button>
+        </form>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
