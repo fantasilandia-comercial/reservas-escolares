@@ -6,13 +6,42 @@
     <title>Reserva Escolar - Fantasilandia</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        .booking-card { max-width: 850px; margin: 40px auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: white; border-top: 8px solid #ed1c24; }
-        .logo-area { text-align: center; margin-bottom: 25px; }
-        .form-label { font-weight: 600; color: #333; }
-        .btn-primary { background-color: #ed1c24; border: none; font-weight: bold; padding: 12px; }
-        .btn-primary:hover { background-color: #c41219; }
-        .section-title { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; color: #ed1c24; font-size: 1.1rem; }
+        body { 
+            background: linear-gradient(135deg, #004795 0%, #002d5f 100%); 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+        .booking-card { 
+            max-width: 850px; margin: 40px auto; padding: 30px; 
+            border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
+            background: white; 
+            border-top: 10px solid #fbe100; /* Yellow top accent */
+        }
+        .logo-area h2 { color: #ed1c24; font-weight: 800; text-transform: uppercase; }
+        
+        .section-title { 
+            border-left: 5px solid #004795; 
+            padding-left: 10px; margin-bottom: 20px; 
+            color: #004795; font-weight: bold; font-size: 1.2rem;
+            background: rgba(0, 71, 149, 0.05);
+        }
+        
+        .btn-primary { 
+            background: linear-gradient(to right, #ed1c24, #b31217); 
+            border: none; font-weight: bold; padding: 15px; 
+            color: white; transition: transform 0.2s;
+        }
+        .btn-primary:hover { 
+            background: linear-gradient(to right, #b31217, #ed1c24); 
+            transform: translateY(-2px);
+        }
+        
+        .form-label { color: #004795; }
+        .form-control:focus, .form-select:focus {
+            border-color: #fbe100;
+            box-shadow: 0 0 0 0.25rem rgba(251, 225, 0, 0.25);
+        }
     </style>
 </head>
 <body>
@@ -21,7 +50,7 @@
     <div class="booking-card">
         <div class="logo-area">
             <h2>🎡 Reservas para Colegios</h2>
-            <p class="text-muted">Busque por ID o seleccione su ubicación</p>
+            <p class="text-muted">Busque por RBD, RUT o Ubicación</p>
         </div>
 
         <form id="bookingForm">
@@ -29,11 +58,11 @@
             <div class="section-title">1. Identificación del Colegio</div>
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label">RBD</label>
+                    <label class="form-label">RBD (Sin dígito verificador)</label>
                     <input type="text" id="rbdInput" class="form-control" placeholder="Ej: 1">
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">RUT Sostenedor</label>
+                    <label class="form-label">RUT Sostenedor (Sin dígito verificador)</label>
                     <input type="text" id="rutInput" class="form-control" placeholder="Ej: 69010100">
                 </div>
             </div>
@@ -54,6 +83,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Nombre del Colegio</label>
+                    <input type="text" id="schoolSearch" class="form-control mb-1" placeholder="Escriba para buscar..." disabled>
                     <select id="schoolSelect" class="form-select" disabled>
                         <option value="">Seleccione Colegio</option>
                     </select>

@@ -8,6 +8,7 @@ const regionSelect = document.getElementById('regionSelect');
 const comunaSelect = document.getElementById('comunaSelect');
 const schoolSelect = document.getElementById('schoolSelect');
 const dateSelect = document.getElementById('visitDate');
+const schoolSearch = document.getElementById('schoolSearch');
 
 // 1. Initialize Application
 fetch('schools.json')
@@ -149,4 +150,17 @@ function resetCascading(full = false) {
 document.getElementById('bookingForm').addEventListener('submit', (e) => {
     e.preventDefault();
     alert("¡Datos listos! En la Fase 3 configuraremos el envío por correo.");
+});
+
+schoolSearch.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase();
+    const region = regionSelect.value;
+    const comuna = comunaSelect.value;
+    // Filter schools that belong to the location AND contain the typed text
+    const filtered = schoolsDatabase.filter(s => 
+        s.NOM_REG_RBD_A === region && 
+        s.NOM_COM_RBD === comuna &&
+        s.NOM_RBD.toLowerCase().includes(term)
+    );
+    updateSchoolList(filtered);
 });
