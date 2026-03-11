@@ -1,14 +1,14 @@
 let schoolsDatabase = [];
-const availableDates = ["2025-04-15", "2025-04-16", "2025-04-22", "2025-05-05", "2025-05-20"];
+const availableDates = ["2026-10-08","2026-10-22","2026-11-09","2026-11-11","2026-11-16","2026-11-23","2026-11-24","2026-12-01","2026-12-02","2026-12-14","2026-12-15"];
 
 // Element Selectors
 const rbdInput = document.getElementById('rbdInput');
 const rutInput = document.getElementById('rutInput');
 const regionSelect = document.getElementById('regionSelect');
 const comunaSelect = document.getElementById('comunaSelect');
+const schoolSearch = document.getElementById('schoolSearch');
 const schoolSelect = document.getElementById('schoolSelect');
 const dateSelect = document.getElementById('visitDate');
-const schoolSearch = document.getElementById('schoolSearch');
 
 // 1. Initialize Application
 fetch('schools.json')
@@ -16,7 +16,8 @@ fetch('schools.json')
     .then(data => {
         schoolsDatabase = data;
         initForm();
-    });
+    })
+    .catch(err => console.error("Error loading JSON:", err));
 
 function initForm() {
     // Populate Dates
@@ -30,34 +31,58 @@ function initForm() {
         dateSelect.appendChild(opt);
     });
 
-    // Populate Regions
+    // Populate Regions (Full List)
     const regions = [...new Set(schoolsDatabase.map(s => s.NOM_REG_RBD_A))].sort();
+    regionSelect.innerHTML = '<option value="">Seleccione Región</option>';
     regions.forEach(reg => {
         const opt = document.createElement('option');
         opt.value = reg; opt.textContent = reg;
         regionSelect.appendChild(opt);
     });
+    
+    // Reset states
+    comunaSelect.disabled = true;
+    schoolSearch.disabled = true;
+    schoolSelect.disabled = true;
 }
 
 // 2. SEARCH BY RBD
 rbdInput.addEventListener('input', (e) => {
     const val = e.target.value.trim();
+    if (val === "") return;
     const school = schoolsDatabase.find(s => s.RBD == val);
     if (school) fillFullForm(school);
 });
 
-// 3. SEARCH BY RUT (Can return multiple schools)
+// 3. SEARCH BY RUT (Can filter multiple schools)
 rutInput.addEventListener('input', (e) => {
     const val = e.target.value.trim();
+    if (val === "") {
+        initForm();
+        return;
+    }
     const matches = schoolsDatabase.filter(s => s.RUT == val);
     
-    if (matches.length === 1) {
-        fillFullForm(matches[0]);
-    } else if (matches.length > 1) {
-        // Just fill the Region and filter the school list
-        regionSelect.value = matches[0].NOM_REG_RBD_A;
-        updateComunaList(matches[0].NOM_REG_RBD_A);
-        updateSchoolList(matches);
+    if (matches.length > 0) {
+        // Update Region list to only show regions where this RUT has schools
+        const rutRegions = [...new Set(matches.map(s => s.NOM_REG_RBD_A))].sort();
+        regionSelect.innerHTML = '<option value="">Seleccione Región</option>';
+        rutRegions.forEach(reg => {
+            const opt = document.createElement('option');
+            opt.value = reg; opt.textContent = reg;
+            regionSelect.appendChild(opt);
+        });
+
+        if (matches.length === 1) {
+            fillFullForm(matches[0]);
+        } else {
+            // If multiple schools for one RUT, pre-select region if there's only one
+            if(rutRegions.length === 1) {
+                regionSelect.value = rutRegions[0];
+                updateComunaList(rutRegions[0]);
+                comunaSelect.disabled = false;
+            }
+        }
     }
 });
 
@@ -65,29 +90,49 @@ rutInput.addEventListener('input', (e) => {
 regionSelect.addEventListener('change', () => {
     const region = regionSelect.value;
     if (!region) {
-        resetCascading(true);
+        resetCascading();
         return;
     }
     updateComunaList(region);
     comunaSelect.disabled = false;
+    schoolSearch.disabled = true;
     schoolSelect.disabled = true;
-    schoolSelect.value = "";
+    schoolSearch.value = "";
 });
 
-// 5. CASCADE: Comuna -> School Name
+// 5. CASCADE: Comuna -> Enable Search & List Schools
 comunaSelect.addEventListener('change', () => {
     const region = regionSelect.value;
     const comuna = comunaSelect.value;
-    if (!comuna) {
+    
+    if (comuna) {
+        schoolSearch.disabled = false;
+        schoolSelect.disabled = false;
+        schoolSearch.value = ""; // Clear previous search
+        
+        const filteredSchools = schoolsDatabase.filter(s => s.NOM_REG_RBD_A === region && s.NOM_COM_RBD === comuna);
+        updateSchoolList(filteredSchools);
+    } else {
+        schoolSearch.disabled = true;
         schoolSelect.disabled = true;
-        return;
     }
-    const filteredSchools = schoolsDatabase.filter(s => s.NOM_REG_RBD_A === region && s.NOM_COM_RBD === comuna);
-    updateSchoolList(filteredSchools);
-    schoolSelect.disabled = false;
 });
 
-// 6. FINAL SELECTION: Fill IDs
+// 6. SEARCH BY NAME (Contains Logic)
+schoolSearch.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase();
+    const region = regionSelect.value;
+    const comuna = comunaSelect.value;
+
+    const filtered = schoolsDatabase.filter(s => 
+        s.NOM_REG_RBD_A === region && 
+        s.NOM_COM_RBD === comuna &&
+        s.NOM_RBD.toLowerCase().includes(term)
+    );
+    updateSchoolList(filtered);
+});
+
+// 7. FINAL SELECTION: Update IDs
 schoolSelect.addEventListener('change', () => {
     const selectedName = schoolSelect.value;
     const region = regionSelect.value;
@@ -113,6 +158,7 @@ function fillFullForm(school) {
     updateSchoolList(schoolsDatabase.filter(s => s.NOM_COM_RBD === school.NOM_COM_RBD));
     schoolSelect.value = school.NOM_RBD;
     schoolSelect.disabled = false;
+    schoolSearch.disabled = false;
 }
 
 function updateComunaList(regionName) {
@@ -126,8 +172,7 @@ function updateComunaList(regionName) {
 }
 
 function updateSchoolList(list) {
-    schoolSelect.innerHTML = '<option value="">Seleccione Colegio</option>';
-    // Sort alphabetically
+    schoolSelect.innerHTML = '<option value="">Seleccione Colegio (' + list.length + ')</option>';
     list.sort((a, b) => a.NOM_RBD.localeCompare(b.NOM_RBD)).forEach(s => {
         const opt = document.createElement('option');
         opt.value = s.NOM_RBD; opt.textContent = s.NOM_RBD;
@@ -135,32 +180,18 @@ function updateSchoolList(list) {
     });
 }
 
-function resetCascading(full = false) {
+function resetCascading() {
     comunaSelect.innerHTML = '<option value="">Seleccione Comuna</option>';
     comunaSelect.disabled = true;
+    schoolSearch.disabled = true;
     schoolSelect.innerHTML = '<option value="">Seleccione Colegio</option>';
     schoolSelect.disabled = true;
-    if(full) {
-        rbdInput.value = "";
-        rutInput.value = "";
-    }
+    rbdInput.value = "";
+    rutInput.value = "";
 }
 
-// FORM SUBMISSION
+// FORM SUBMISSION (Next: Phase 3)
 document.getElementById('bookingForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    alert("¡Datos listos! En la Fase 3 configuraremos el envío por correo.");
-});
-
-schoolSearch.addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase();
-    const region = regionSelect.value;
-    const comuna = comunaSelect.value;
-    // Filter schools that belong to the location AND contain the typed text
-    const filtered = schoolsDatabase.filter(s => 
-        s.NOM_REG_RBD_A === region && 
-        s.NOM_COM_RBD === comuna &&
-        s.NOM_RBD.toLowerCase().includes(term)
-    );
-    updateSchoolList(filtered);
+    alert("Formulario validado correctamente. ¡Listo para configurar el envío!");
 });
