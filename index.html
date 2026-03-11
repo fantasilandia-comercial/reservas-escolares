@@ -7,34 +7,35 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { 
-            /* Responsive Background Image */
             background: url('background.jpg') no-repeat center center fixed; 
             background-size: cover;
             font-family: 'Segoe UI', Tahoma, sans-serif; 
             min-height: 100vh;
-            padding: 20px;
+            padding: 40px 20px;
         }
         .booking-card { 
-            max-width: 850px; margin: 20px auto; padding: 30px; 
-            border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
-            background: rgba(255, 255, 255, 0.95); /* Slight transparency */
-            border-top: 10px solid #004795; /* Blue top accent */
+            max-width: 900px; margin: 0 auto; padding: 40px; 
+            border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
+            background: rgba(255, 255, 255, 0.98); 
+            border-top: 12px solid #004795; 
         }
-        .logo-area { text-align: center; }
+        .logo-area { text-align: center; margin-bottom: 35px; }
         .logo-area h2 { color: #000000; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
         .logo-area p { color: #000000; font-size: 1.1rem; }
         
         .section-title { 
-            border-left: 5px solid #ed1c24; /* Red section accent */
-            padding-left: 10px; margin-top: 30px; margin-bottom: 20px; 
+            border-left: 5px solid #ed1c24; 
+            padding-left: 15px; margin-top: 35px; margin-bottom: 20px; 
             color: #004795; font-weight: bold; font-size: 1.2rem;
+            text-transform: uppercase;
         }
-        
+        .form-label { color: #004795; font-weight: 600; }
         .btn-primary { 
             background: linear-gradient(to right, #ed1c24, #b31217); 
             border: none; font-weight: bold; padding: 15px; font-size: 1.2rem;
         }
-        .form-label { color: #004795; font-weight: 600; }
+        .btn-primary:hover { background: #b31217; transform: scale(1.01); }
+        .readonly-field { background-color: #f8f9fa !important; }
     </style>
 </head>
 <body>
@@ -43,7 +44,7 @@
     <div class="booking-card">
         <div class="logo-area">
             <h2>🎡 Reservas para Colegios</h2>
-            <p class="text-muted">Busque por RBD, RUT o Ubicación</p>
+            <p>Complete los datos para coordinar su visita al parque</p>
         </div>
 
         <form id="bookingForm">
@@ -51,63 +52,79 @@
             <div class="section-title">1. Identificación del Colegio</div>
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label">RBD (Sin dígito verificador)</label>
+                    <label class="form-label">RBD</label>
                     <input type="text" id="rbdInput" class="form-control" placeholder="Ej: 1">
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">RUT Sostenedor (Sin dígito verificador)</label>
+                    <label class="form-label">RUT Sostenedor</label>
                     <input type="text" id="rutInput" class="form-control" placeholder="Ej: 69010100">
                 </div>
             </div>
 
-            <!-- Part 2: Location and Selection -->
             <div class="row g-3 mt-1">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label class="form-label">Región</label>
                     <select id="regionSelect" class="form-select">
                         <option value="">Seleccione Región</option>
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label class="form-label">Comuna</label>
                     <select id="comunaSelect" class="form-select" disabled>
                         <option value="">Seleccione Comuna</option>
                     </select>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">Nombre del Colegio</label>
-                    <input type="text" id="schoolSearch" class="form-control mb-1" placeholder="Escriba para buscar..." disabled>
-                    <select id="schoolSelect" class="form-select" disabled>
-                        <option value="">Seleccione Colegio</option>
+            </div>
+
+            <!-- School name selection on its own row -->
+            <div class="row g-3 mt-1">
+                <div class="col-md-12">
+                    <label class="form-label">Buscar y Seleccionar Establecimiento</label>
+                    <div class="input-group mb-1">
+                        <span class="input-group-text">🔍</span>
+                        <input type="text" id="schoolSearch" class="form-control" placeholder="Escriba parte del nombre para filtrar..." disabled>
+                    </div>
+                    <select id="schoolSelect" class="form-select" disabled required>
+                        <option value="">Seleccione el colegio de la lista</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Part 3: Contact -->
+            <!-- Part 2: Contact -->
             <div class="section-title">2. Información de Contacto</div>
             <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label">Email Principal</label>
-                    <input type="email" id="contactEmail" class="form-control" required placeholder="ejemplo@correo.cl">
+                <div class="col-md-4">
+                    <label class="form-label">Nombre Contacto 1</label>
+                    <input type="text" id="contactName1" class="form-control" required placeholder="Nombre Apellido">
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label">Teléfono Principal</label>
-                    <input type="text" id="contactPhone" class="form-control" required placeholder="+569 1234 5678">
+                <div class="col-md-4">
+                    <label class="form-label">Email 1</label>
+                    <input type="email" id="contactEmail1" class="form-control" required placeholder="ejemplo@correo.cl">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Teléfono 1</label>
+                    <input type="tel" id="contactPhone1" class="form-control" required 
+                           pattern="^(\+569|9)[0-9]{8}$" placeholder="+56912345678">
                 </div>
             </div>
             <div class="row g-3 mt-1">
-                <div class="col-md-6">
-                    <label class="form-label">Email Secundario (Opcional)</label>
+                <div class="col-md-4">
+                    <label class="form-label">Nombre Contacto 2</label>
+                    <input type="text" id="contactName2" class="form-control" placeholder="Opcional">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Email 2</label>
                     <input type="email" id="contactEmail2" class="form-control" placeholder="segundo@correo.cl">
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label">Teléfono Secundario (Opcional)</label>
-                    <input type="text" id="contactPhone2" class="form-control" placeholder="+569 ...">
+                <div class="col-md-4">
+                    <label class="form-label">Teléfono 2</label>
+                    <input type="tel" id="contactPhone2" class="form-control" 
+                           pattern="^(\+569|9)[0-9]{8}$" placeholder="+569...">
                 </div>
             </div>
 
-            <!-- Part 4: Visit Details -->
-            <div class="section-title mt-4">3. Detalles de la Visita</div>
+            <!-- Part 3: Visit -->
+            <div class="section-title">3. Detalles de la Visita</div>
             <div class="row g-3">
                 <div class="col-md-4">
                     <label class="form-label">Fecha disponible</label>
@@ -116,19 +133,16 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Alumnos (mín. 10)</label>
+                    <label class="form-label">N° de Alumnos</label>
                     <input type="number" id="kidsCount" class="form-control" min="10" required>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Producto</label>
-                    <select id="productType" class="form-select">
-                        <option value="Entrada">Solo Entrada</option>
-                        <option value="Entrada + Almuerzo">Entrada + Almuerzo</option>
-                    </select>
+                    <label class="form-label">N° de Adultos</label>
+                    <input type="number" id="adultsCount" class="form-control" min="1" required>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 mt-4 shadow-sm">Enviar Solicitud</button>
+            <button type="submit" class="btn btn-primary w-100 mt-5 shadow-sm">ENVIAR SOLICITUD DE RESERVA</button>
         </form>
     </div>
 </div>
