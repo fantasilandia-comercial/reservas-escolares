@@ -6,13 +6,13 @@
     <title>Reserva Escolar - Fantasilandia</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .booking-card { max-width: 750px; margin: 40px auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: white; border-top: 8px solid #ed1c24; }
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        .booking-card { max-width: 850px; margin: 40px auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: white; border-top: 8px solid #ed1c24; }
         .logo-area { text-align: center; margin-bottom: 25px; }
         .form-label { font-weight: 600; color: #333; }
-        .readonly-field { background-color: #e9ecef !important; border-color: #dee2e6; color: #495057; }
         .btn-primary { background-color: #ed1c24; border: none; font-weight: bold; padding: 12px; }
         .btn-primary:hover { background-color: #c41219; }
+        .section-title { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; color: #ed1c24; font-size: 1.1rem; }
     </style>
 </head>
 <body>
@@ -20,42 +20,51 @@
 <div class="container">
     <div class="booking-card">
         <div class="logo-area">
-            <h2>🎡 Registro de Visita Escolar</h2>
-            <p class="text-muted">Busque su colegio por RBD para comenzar</p>
+            <h2>🎡 Reservas para Colegios</h2>
+            <p class="text-muted">Busque por ID o seleccione su ubicación</p>
         </div>
 
         <form id="bookingForm">
-            <!-- RBD Lookup Section -->
+            <!-- Part 1: Identification -->
+            <div class="section-title">1. Identificación del Colegio</div>
             <div class="row g-3">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label class="form-label">RBD</label>
-                    <input type="text" id="rbdInput" class="form-control" placeholder="Ej: 1" required>
-                    <div id="rbdFeedback" class="invalid-feedback">Colegio no encontrado</div>
+                    <input type="text" id="rbdInput" class="form-control" placeholder="Ej: 1">
                 </div>
-                <div class="col-md-8">
-                    <label class="form-label">Nombre del Establecimiento</label>
-                    <input type="text" id="schoolName" class="form-control readonly-field" readonly placeholder="Se autocompleta al ingresar RBD">
+                <div class="col-md-6">
+                    <label class="form-label">RUT Sostenedor</label>
+                    <input type="text" id="rutInput" class="form-control" placeholder="Ej: 69010100">
                 </div>
             </div>
 
-            <!-- Geography Section -->
+            <!-- Part 2: Location and Selection -->
             <div class="row g-3 mt-1">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label class="form-label">Región</label>
-                    <input type="text" id="regionName" class="form-control readonly-field" readonly>
+                    <select id="regionSelect" class="form-select">
+                        <option value="">Seleccione Región</option>
+                    </select>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label class="form-label">Comuna</label>
-                    <input type="text" id="comunaName" class="form-control readonly-field" readonly>
+                    <select id="comunaSelect" class="form-select" disabled>
+                        <option value="">Seleccione Comuna</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Nombre del Colegio</label>
+                    <select id="schoolSelect" class="form-select" disabled>
+                        <option value="">Seleccione Colegio</option>
+                    </select>
                 </div>
             </div>
 
-            <hr class="my-4">
-
-            <!-- Personal Data -->
+            <!-- Part 3: Contact -->
+            <div class="section-title mt-4">2. Información de Contacto</div>
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label">Profesor / Encargado</label>
+                    <label class="form-label">Nombre Encargado</label>
                     <input type="text" id="contactName" class="form-control" required>
                 </div>
                 <div class="col-md-6">
@@ -64,26 +73,29 @@
                 </div>
             </div>
 
-            <!-- Booking Details -->
-            <div class="row g-3 mt-1">
+            <!-- Part 4: Visit Details -->
+            <div class="section-title mt-4">3. Detalles de la Visita</div>
+            <div class="row g-3">
                 <div class="col-md-4">
-                    <label class="form-label">Fecha de Visita</label>
-                    <input type="date" id="visitDate" class="form-control" required>
+                    <label class="form-label">Fecha disponible</label>
+                    <select id="visitDate" class="form-select" required>
+                        <option value="">Cargando fechas...</option>
+                    </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">N° de Alumnos</label>
-                    <input type="number" id="kidsCount" class="form-control" required min="10">
+                    <label class="form-label">Alumnos (mín. 10)</label>
+                    <input type="number" id="kidsCount" class="form-control" min="10" required>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Tipo de Producto</label>
+                    <label class="form-label">Producto</label>
                     <select id="productType" class="form-select">
-                        <option value="Entrada Simple">Entrada Simple</option>
+                        <option value="Entrada">Solo Entrada</option>
                         <option value="Entrada + Almuerzo">Entrada + Almuerzo</option>
                     </select>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 mt-4 shadow-sm">Enviar Solicitud de Reserva</button>
+            <button type="submit" class="btn btn-primary w-100 mt-4 shadow-sm">Enviar Solicitud</button>
         </form>
     </div>
 </div>
