@@ -98,7 +98,10 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Email 1</label>
-                    <input type="email" id="contactEmail1" class="form-control" required placeholder="ejemplo@correo.cl">
+                    <input type="email" id="contactEmail1" class="form-control" required 
+                        pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" 
+                        title="Debe ingresar un correo válido con dominio (ejemplo: contacto@colegio.cl)" 
+                        placeholder="ejemplo@correo.cl">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Teléfono 1</label>
@@ -113,7 +116,10 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Email 2</label>
-                    <input type="email" id="contactEmail2" class="form-control" placeholder="segundo@correo.cl">
+                    <input type="email" id="contactEmail2" class="form-control" required 
+                        pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" 
+                        title="Debe ingresar un correo válido con dominio (ejemplo: contacto@colegio.cl)" 
+                        placeholder="segundo@correo.cl">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Teléfono 2</label>
