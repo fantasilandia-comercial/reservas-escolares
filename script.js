@@ -172,7 +172,68 @@ function resetCascading() {
 }
 
 // Form Submission
+// Form Submission via EmailJS
 document.getElementById('bookingForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    alert("¡Validación Exitosa! Estamos listos para la Fase 3.");
+
+    // 1. Check if reCAPTCHA is completed
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+        alert("Por favor, confirme que no es un robot marcando la casilla de reCAPTCHA.");
+        return;
+    }
+
+    // 2. Disable button to prevent double-clicks
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "ENVIANDO SOLICITUD...";
+
+    // 3. Gather and structure all data into a JSON object
+    const payload = {
+        RBD: document.getElementById('rbdInput').value,
+        RUT: document.getElementById('rutInput').value,
+        Region: document.getElementById('regionSelect').value,
+        Comuna: document.getElementById('comunaSelect').value,
+        Colegio: document.getElementById('schoolSelect').value,
+        Contacto1_Nombre: document.getElementById('contactName1').value,
+        Contacto1_Email: document.getElementById('contactEmail1').value,
+        Contacto1_Telefono: document.getElementById('contactPhone1').value,
+        Contacto2_Nombre: document.getElementById('contactName2').value || "N/A",
+        Contacto2_Email: document.getElementById('contactEmail2').value || "N/A",
+        Contacto2_Telefono: document.getElementById('contactPhone2').value || "N/A",
+        Fecha_Visita: document.getElementById('visitDate').value,
+        Alumnos: parseInt(document.getElementById('kidsCount').value),
+        Adultos: parseInt(document.getElementById('adultsCount').value)
+    };
+
+    // 4. Parameters required by your EmailJS Template
+    const templateParams = {
+        school_name: payload.Colegio,
+        reply_to: payload.Contacto1_Email,
+        json_payload: JSON.stringify(payload, null, 2), // Converts object to formatted JSON string
+        "g-recaptcha-response": recaptchaResponse       // Required by EmailJS to validate the token securely
+    };
+
+    // 5. Send via EmailJS
+    // REPLACE THESE TWO STRINGS WITH YOUR ACTUAL IDs
+    emailjs.send('service_ygicx87', 'template_mtbk1wg', templateParams)
+        .then(function(response) {
+            alert('¡Reserva enviada con éxito! El departamento comercial la evaluará.');
+            
+            // Clean up the form after successful submission
+            document.getElementById('bookingForm').reset();
+            resetCascading();
+            grecaptcha.reset(); // Reset the reCAPTCHA widget
+            
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }, function(error) {
+            console.error("EmailJS Error:", error);
+            alert('Hubo un error al enviar la reserva. Por favor, intente nuevamente.');
+            
+            grecaptcha.reset(); // Reset the reCAPTCHA widget even if it fails
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        });
 });
