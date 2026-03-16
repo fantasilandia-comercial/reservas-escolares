@@ -1,5 +1,6 @@
 let schoolsDatabase = [];
-const availableDates = ["2025-04-15", "2025-04-16", "2025-04-22", "2025-05-05", "2025-05-20"];
+const availableDates = ["2026-10-08", "2026-10-22", "2026-11-09", "2026-11-11", "2026-11-16", "2026-11-23",
+                        "2026-11-24", "2026-12-01", "2026-12-02", "2026-12-14", "2026-12-15"];
 
 // Elements
 const rbdInput = document.getElementById('rbdInput');
