@@ -242,6 +242,16 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
         return;
     }
     
+    // -- EXTRACT MULTIPLE COURSES --
+    const cursoSelect = document.getElementById('cursoSelect');
+    // This takes all highlighted options and joins them with a comma (e.g., "1° Medio, 2° Medio")
+    const selectedCursos = Array.from(cursoSelect.selectedOptions).map(opt => opt.value).join(", ");
+    
+    if (selectedCursos === "") {
+        alert("Por favor seleccione al menos un curso o nivel.");
+        return;
+    }
+
     // 1. Check if reCAPTCHA is completed
     const recaptchaResponse = grecaptcha.getResponse();
     if (!recaptchaResponse) {
@@ -270,6 +280,9 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
         Contacto2_Telefono: document.getElementById('contactPhone2').value || "N/A",
         Modalidad: document.getElementById('modalidadSelect').value, 
         Fecha_Visita: document.getElementById('visitDate').value,
+        Curso: selectedCursos,
+        Alumnos: kids,
+        Adultos: adults,
         Alumnos: parseInt(document.getElementById('kidsCount').value),
         Adultos: parseInt(document.getElementById('adultsCount').value),
         Alimentacion: mealSummaryArray.join(" | ") 

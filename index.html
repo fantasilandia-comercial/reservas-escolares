@@ -130,8 +130,10 @@
 
 <!-- Part 3: Visit -->
             <div class="section-title">3. Detalles de la Visita</div>
+            
+            <!-- Row 1: Modalidad & Fecha (50% / 50%) -->
             <div class="row g-3">
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <label class="form-label">Modalidad</label>
                     <select id="modalidadSelect" class="form-select" required>
                         <option value="">Seleccione Modalidad</option>
@@ -139,28 +141,54 @@
                         <option value="Jornada Completa">Jornada Completa</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <label class="form-label">Fecha disponible</label>
                     <select id="visitDate" class="form-select" required disabled>
                         <option value="">Primero seleccione modalidad</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+            </div>
+
+            <!-- Row 2: Curso, Niños, Adultos (33% / 33% / 33%) -->
+            <div class="row g-3 mt-1">
+                <div class="col-md-4">
+                    <label class="form-label">Curso(s) <small class="text-muted">(Ctrl/Cmd para varios)</small></label>
+                    <select id="cursoSelect" class="form-select" multiple size="4" required>
+                        <option value="Pre-Kinder">Pre-Kinder</option>
+                        <option value="Kinder">Kinder</option>
+                        <option value="1° Básico">1° Básico</option>
+                        <option value="2° Básico">2° Básico</option>
+                        <option value="3° Básico">3° Básico</option>
+                        <option value="4° Básico">4° Básico</option>
+                        <option value="5° Básico">5° Básico</option>
+                        <option value="6° Básico">6° Básico</option>
+                        <option value="7° Básico">7° Básico</option>
+                        <option value="8° Básico">8° Básico</option>
+                        <option value="1° Medio">1° Medio</option>
+                        <option value="2° Medio">2° Medio</option>
+                        <option value="3° Medio">3° Medio</option>
+                        <option value="4° Medio">4° Medio</option>
+                        <option value="Actividad Extracurricular">Actividad Extracurricular (Banda, etc.)</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
                     <label class="form-label">N° de Alumnos</label>
                     <input type="number" id="kidsCount" class="form-control" min="0" required value="0">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label class="form-label">N° de Adultos</label>
                     <input type="number" id="adultsCount" class="form-control" min="0" required value="0">
                 </div>
             </div>
-                                        <!-- NEW: Dynamic Meal Options -->
+
+            <!-- Row 3: Alimentación -->
             <div class="row g-3 mt-3">
                 <div class="col-12">
                     <label class="form-label text-danger">Opciones de Alimentación (La suma debe ser igual al total de visitantes)</label>
                     <div id="mealOptionsContainer" class="row g-3 p-3 bg-light rounded border">
                         <!-- Options will be injected here by JavaScript -->
                     </div>
+                </div>
             </div>
 
             <!-- reCAPTCHA Widget -->
