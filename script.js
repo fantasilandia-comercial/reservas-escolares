@@ -2,6 +2,17 @@ let schoolsDatabase = [];
 const availableDates = ["2026-10-08", "2026-10-22", "2026-11-09", "2026-11-11", "2026-11-16", "2026-11-23",
                         "2026-11-24", "2026-12-01", "2026-12-02", "2026-12-14", "2026-12-15"];
 
+// Dynamic Menu Options
+const mealOptions =[
+    { id: "meal_burger", name: "Combo Hamburguesa" },
+    { id: "meal_pizza", name: "Combo Pizza" },
+    { id: "meal_hotdog", name: "Combo Hot Dog" },
+    { id: "meal_none", name: "Solo Entrada (Sin Alimentación)" }
+];
+
+// Reference to the new container
+const mealContainer = document.getElementById('mealOptionsContainer');
+
 // Elements
 const rbdInput = document.getElementById('rbdInput');
 const rutInput = document.getElementById('rutInput');
@@ -38,6 +49,18 @@ function initForm() {
         const opt = document.createElement('option');
         opt.value = reg; opt.textContent = reg;
         regionSelect.appendChild(opt);
+    });
+
+    // Render Meal Options dynamically
+    mealContainer.innerHTML = '';
+    mealOptions.forEach(meal => {
+        const col = document.createElement('div');
+        col.className = 'col-md-3 col-sm-6';
+        col.innerHTML = `
+            <label class="form-label" style="font-size: 0.9rem;">${meal.name}</label>
+            <input type="number" id="${meal.id}" class="form-control meal-input" min="0" value="0">
+        `;
+        mealContainer.appendChild(col);
     });
 }
 
@@ -177,6 +200,29 @@ function resetCascading() {
 document.getElementById('bookingForm').addEventListener('submit', (e) => {
     e.preventDefault();
 
+    // -- NEW MATH VALIDATION --
+    const kids = parseInt(document.getElementById('kidsCount').value) || 0;
+    const adults = parseInt(document.getElementById('adultsCount').value) || 0;
+    const totalVisitors = kids + adults;
+
+    let totalMeals = 0;
+    let mealSummaryArray =[];
+    
+    // Loop through our dynamic options to calculate totals
+    mealOptions.forEach(meal => {
+        const qty = parseInt(document.getElementById(meal.id).value) || 0;
+        totalMeals += qty;
+        if (qty > 0) {
+            mealSummaryArray.push(`${meal.name}: ${qty}`);
+        }
+    });
+
+    // Stop the form if the numbers don't match
+    if (totalMeals !== totalVisitors) {
+        alert(`Error: Tienes ${totalVisitors} visitantes en total, pero has asignado ${totalMeals} opciones de alimentación. Los números deben coincidir.`);
+        return;
+    }
+    
     // 1. Check if reCAPTCHA is completed
     const recaptchaResponse = grecaptcha.getResponse();
     if (!recaptchaResponse) {
@@ -205,7 +251,8 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
         Contacto2_Telefono: document.getElementById('contactPhone2').value || "N/A",
         Fecha_Visita: document.getElementById('visitDate').value,
         Alumnos: parseInt(document.getElementById('kidsCount').value),
-        Adultos: parseInt(document.getElementById('adultsCount').value)
+        Adultos: parseInt(document.getElementById('adultsCount').value),
+        Alimentacion: mealSummaryArray.join(" | ") 
     };
 
     // 4. Parameters required by your EmailJS Template
