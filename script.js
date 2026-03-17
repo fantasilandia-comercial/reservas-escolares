@@ -243,9 +243,9 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     }
     
     // -- EXTRACT MULTIPLE COURSES --
-    const cursoSelect = document.getElementById('cursoSelect');
-    // This takes all highlighted options and joins them with a comma (e.g., "1° Medio, 2° Medio")
-    const selectedCursos = Array.from(cursoSelect.selectedOptions).map(opt => opt.value).join(", ");
+    const checkedBoxes = document.querySelectorAll('.curso-checkbox:checked');   
+    // Extract their values and join them with a comma
+    const selectedCursos = Array.from(checkedBoxes).map(cb => cb.value).join(", ");
     
     if (selectedCursos === "") {
         alert("Por favor seleccione al menos un curso o nivel.");

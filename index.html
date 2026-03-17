@@ -152,24 +152,25 @@
             <!-- Row 2: Curso, Niños, Adultos (33% / 33% / 33%) -->
             <div class="row g-3 mt-1">
                 <div class="col-md-4">
-                    <label class="form-label">Curso(s) <small class="text-muted">(Ctrl/Cmd para varios)</small></label>
-                    <select id="cursoSelect" class="form-select" multiple size="4" required>
-                        <option value="Pre-Kinder">Pre-Kinder</option>
-                        <option value="Kinder">Kinder</option>
-                        <option value="1° Básico">1° Básico</option>
-                        <option value="2° Básico">2° Básico</option>
-                        <option value="3° Básico">3° Básico</option>
-                        <option value="4° Básico">4° Básico</option>
-                        <option value="5° Básico">5° Básico</option>
-                        <option value="6° Básico">6° Básico</option>
-                        <option value="7° Básico">7° Básico</option>
-                        <option value="8° Básico">8° Básico</option>
-                        <option value="1° Medio">1° Medio</option>
-                        <option value="2° Medio">2° Medio</option>
-                        <option value="3° Medio">3° Medio</option>
-                        <option value="4° Medio">4° Medio</option>
-                        <option value="Actividad Extracurricular">Actividad Extracurricular (Banda, etc.)</option>
-                    </select>
+                    <label class="form-label">Curso(s)</label>
+                    <!-- Scrollable Checkbox Container -->
+                    <div class="border rounded p-2 bg-white" style="max-height: 130px; overflow-y: auto; font-size: 0.9rem;">
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="Pre-Kinder" id="chk_prek"><label class="form-check-label" for="chk_prek">Pre-Kinder</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="Kinder" id="chk_kin"><label class="form-check-label" for="chk_kin">Kinder</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="1° Básico" id="chk_1b"><label class="form-check-label" for="chk_1b">1° Básico</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="2° Básico" id="chk_2b"><label class="form-check-label" for="chk_2b">2° Básico</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="3° Básico" id="chk_3b"><label class="form-check-label" for="chk_3b">3° Básico</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="4° Básico" id="chk_4b"><label class="form-check-label" for="chk_4b">4° Básico</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="5° Básico" id="chk_5b"><label class="form-check-label" for="chk_5b">5° Básico</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="6° Básico" id="chk_6b"><label class="form-check-label" for="chk_6b">6° Básico</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="7° Básico" id="chk_7b"><label class="form-check-label" for="chk_7b">7° Básico</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="8° Básico" id="chk_8b"><label class="form-check-label" for="chk_8b">8° Básico</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="1° Medio" id="chk_1m"><label class="form-check-label" for="chk_1m">1° Medio</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="2° Medio" id="chk_2m"><label class="form-check-label" for="chk_2m">2° Medio</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="3° Medio" id="chk_3m"><label class="form-check-label" for="chk_3m">3° Medio</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="4° Medio" id="chk_4m"><label class="form-check-label" for="chk_4m">4° Medio</label></div>
+                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="Actividad Extracurricular" id="chk_extra"><label class="form-check-label" for="chk_extra">Actividad Extracurricular</label></div>
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">N° de Alumnos</label>
@@ -184,9 +185,11 @@
             <!-- Row 3: Alimentación -->
             <div class="row g-3 mt-3">
                 <div class="col-12">
-                    <label class="form-label text-danger">Opciones de Alimentación (La suma debe ser igual al total de visitantes)</label>
-                    <div id="mealOptionsContainer" class="row g-3 p-3 bg-light rounded border">
-                        <!-- Options will be injected here by JavaScript -->
+                    <div class="p-3 bg-light rounded border">
+                        <label class="form-label text-danger fw-bold d-block border-bottom pb-2 mb-3">Opciones de Alimentación (La suma debe ser igual al total de visitantes)</label>
+                        <div id="mealOptionsContainer" class="row g-3">
+                            <!-- Options will be injected here by JavaScript -->
+                        </div>
                     </div>
                 </div>
             </div>
