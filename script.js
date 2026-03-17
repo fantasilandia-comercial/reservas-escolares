@@ -10,7 +10,7 @@ const mealOptions =[
     { id: "meal_burger", name: "Combo Burger y Papas" },
     { id: "meal_pizza", name: "Combo Pizza" },
     { id: "meal_ensalada", name: "Combo Ensalada" },
-    { id: "meal_none", name: "Solo Entrada (Sin Alimentación)" }
+    { id: "meal_none", name: "Solo Entrada" }
 ];
 
 // Reference to the new container
