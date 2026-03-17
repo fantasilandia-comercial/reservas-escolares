@@ -283,8 +283,6 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
         Curso: selectedCursos,
         Alumnos: kids,
         Adultos: adults,
-        Alumnos: parseInt(document.getElementById('kidsCount').value),
-        Adultos: parseInt(document.getElementById('adultsCount').value),
         Alimentacion: mealSummaryArray.join(" | ") 
     };
 
