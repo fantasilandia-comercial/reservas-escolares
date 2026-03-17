@@ -128,24 +128,33 @@
                 </div>
             </div>
 
-            <!-- Part 3: Visit -->
+<!-- Part 3: Visit -->
             <div class="section-title">3. Detalles de la Visita</div>
             <div class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label">Fecha disponible</label>
-                    <select id="visitDate" class="form-select" required>
-                        <option value="">Cargando fechas...</option>
+                <div class="col-md-3">
+                    <label class="form-label">Modalidad</label>
+                    <select id="modalidadSelect" class="form-select" required>
+                        <option value="">Seleccione Modalidad</option>
+                        <option value="Media Jornada">Media Jornada</option>
+                        <option value="Jornada Completa">Jornada Completa</option>
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <label class="form-label">Fecha disponible</label>
+                    <select id="visitDate" class="form-select" required disabled>
+                        <option value="">Primero seleccione modalidad</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
                     <label class="form-label">N° de Alumnos</label>
-                    <input type="number" id="kidsCount" class="form-control" min="10" required>
+                    <input type="number" id="kidsCount" class="form-control" min="0" required value="0">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">N° de Adultos</label>
-                    <input type="number" id="adultsCount" class="form-control" min="1" required>
+                    <input type="number" id="adultsCount" class="form-control" min="0" required value="0">
                 </div>
-                            <!-- NEW: Dynamic Meal Options -->
+            </div>
+                                        <!-- NEW: Dynamic Meal Options -->
             <div class="row g-3 mt-3">
                 <div class="col-12">
                     <label class="form-label text-danger">Opciones de Alimentación (La suma debe ser igual al total de visitantes)</label>

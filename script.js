@@ -1,6 +1,9 @@
 let schoolsDatabase = [];
-const availableDates = ["2026-10-08", "2026-10-22", "2026-11-09", "2026-11-11", "2026-11-16", "2026-11-23",
-                        "2026-11-24", "2026-12-01", "2026-12-02", "2026-12-14", "2026-12-15"];
+const availableDates = {
+    "Media Jornada": ["2026-11-26", "2026-12-03", "2026-12-04", "2026-12-16"],
+    "Jornada Completa": ["2026-10-29", "2026-11-16", "2026-11-23",
+                        "2026-11-24", "2026-11-30", "2026-12-01", "2026-12-09", "2026-12-21", "2026-12-22"]
+    };
 
 // Dynamic Menu Options
 const mealOptions =[
@@ -21,6 +24,7 @@ const comunaSelect = document.getElementById('comunaSelect');
 const schoolSearch = document.getElementById('schoolSearch');
 const schoolSelect = document.getElementById('schoolSelect');
 const dateSelect = document.getElementById('visitDate');
+const modalidadSelect = document.getElementById('modalidadSelect');
 
 // 1. Init
 fetch('schools.json')
@@ -31,16 +35,6 @@ fetch('schools.json')
     });
 
 function initForm() {
-    // Dates
-    dateSelect.innerHTML = '<option value="">Seleccione una fecha</option>';
-    availableDates.forEach(date => {
-        const opt = document.createElement('option');
-        opt.value = date;
-        opt.textContent = new Date(date + "T00:00:00").toLocaleDateString('es-CL', { 
-            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' 
-        });
-        dateSelect.appendChild(opt);
-    });
 
     // Regions
     const regions = [...new Set(schoolsDatabase.map(s => s.NOM_REG_RBD_A))].sort();
@@ -124,6 +118,31 @@ comunaSelect.addEventListener('change', () => {
         updateSchoolList(filtered);
     }
 });
+
+// Cascade: Modalidad -> Fecha
+
+modalidadSelect.addEventListener('change', (e) => {
+    const modalidad = e.target.value;
+    dateSelect.innerHTML = '<option value="">Seleccione una fecha</option>';
+    
+    if (modalidad && availableDates[modalidad]) {
+        dateSelect.disabled = false;
+        
+        availableDates[modalidad].forEach(date => {
+            const opt = document.createElement('option');
+            opt.value = date;
+            // The "T00:00:00" prevents the timezone from shifting the day backwards
+            opt.textContent = new Date(date + "T00:00:00").toLocaleDateString('es-CL', { 
+                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' 
+            });
+            dateSelect.appendChild(opt);
+        });
+    } else {
+        dateSelect.disabled = true;
+        dateSelect.innerHTML = '<option value="">Primero seleccione modalidad</option>';
+    }
+});
+
 
 // 6. Search Name (Contains)
 schoolSearch.addEventListener('input', (e) => {
@@ -249,6 +268,7 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
         Contacto2_Nombre: document.getElementById('contactName2').value || "N/A",
         Contacto2_Email: document.getElementById('contactEmail2').value || "N/A",
         Contacto2_Telefono: document.getElementById('contactPhone2').value || "N/A",
+        Modalidad: document.getElementById('modalidadSelect').value, 
         Fecha_Visita: document.getElementById('visitDate').value,
         Alumnos: parseInt(document.getElementById('kidsCount').value),
         Adultos: parseInt(document.getElementById('adultsCount').value),
