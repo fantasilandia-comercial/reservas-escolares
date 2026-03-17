@@ -7,9 +7,9 @@ const availableDates = {
 
 // Dynamic Menu Options
 const mealOptions =[
-    { id: "meal_burger", name: "Combo Hamburguesa" },
+    { id: "meal_burger", name: "Combo Burger y Papas" },
     { id: "meal_pizza", name: "Combo Pizza" },
-    { id: "meal_hotdog", name: "Combo Hot Dog" },
+    { id: "meal_ensalada", name: "Combo Ensalada" },
     { id: "meal_none", name: "Solo Entrada (Sin Alimentación)" }
 ];
 
