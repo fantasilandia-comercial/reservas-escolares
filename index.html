@@ -23,16 +23,64 @@
         .logo-area h2 { color: #000000; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
         .logo-area p { color: #000000; font-size: 1.1rem; }
         
-        .section-title { 
-            border-left: 5px solid #ed1c24; 
-            padding-left: 15px; margin-top: 35px; margin-bottom: 20px; 
-            color: #004795; font-weight: bold; font-size: 1.2rem;
-            text-transform: uppercase;
+/* --- NEW SECTION STYLES --- */
+        .section-box {
+            padding: 25px 30px;
+            border-radius: 15px;
+            margin-bottom: 35px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            transition: transform 0.2s ease;
         }
-        .form-label { color: #004795; font-weight: 600; }
+        .section-box:hover {
+            transform: translateY(-2px);
+        }
+        .section-title { 
+            margin-top: 0; margin-bottom: 20px; 
+            font-weight: 800; font-size: 1.25rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid;
+            padding-bottom: 10px;
+        }
+        .form-label { font-weight: 600; font-size: 0.95rem; }
+
+        /* Palette 1: Identificación (Aqua/Teal) */
+        .section-id {
+            background-color: rgba(101, 177, 153, 0.12); /* Very light #65b199 */
+            border-left: 8px solid #5bae94;
+        }
+        .section-id .section-title, .section-id .form-label { color: #116a61; }
+        .section-id .section-title { border-bottom-color: rgba(17, 106, 97, 0.2); }
+
+        /* Palette 2: Contacto (Blues) */
+        .section-contact {
+            background-color: rgba(172, 203, 227, 0.25); /* Very light #accbe3 */
+            border-left: 8px solid #1288c3;
+        }
+        .section-contact .section-title, .section-contact .form-label { color: #3070b4; }
+        .section-contact .section-title { border-bottom-color: rgba(48, 112, 180, 0.2); }
+
+        /* Palette 3: Visita (Limes/Greens) */
+        .section-visit {
+            background-color: rgba(207, 214, 38, 0.15); /* Very light #cfd626 */
+            border-left: 8px solid #d2d726;
+        }
+        .section-visit .section-title, .section-visit .form-label { color: #1c7242; }
+        .section-visit .section-title { border-bottom-color: rgba(28, 114, 66, 0.2); }
+        .section-visit .bg-light { background-color: rgba(255,255,255,0.6) !important; } /* Softens the inner meal box */
+
+        /* Submit Button (Oranges/Reds) */
         .btn-primary { 
-            background: linear-gradient(to right, #ed1c24, #b31217); 
-            border: none; font-weight: bold; padding: 15px; font-size: 1.2rem;
+            background: linear-gradient(to right, #f59600, #c84428); /* Vibrant Orange to Red */
+            border: none; font-weight: 800; padding: 16px; font-size: 1.2rem;
+            border-radius: 12px;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 20px rgba(200, 68, 40, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover { 
+            background: linear-gradient(to right, #cb582a, #b32525); /* Darker Orange to Darker Red */
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 25px rgba(179, 37, 37, 0.5);
         }
         .btn-primary:hover { background: #b31217; transform: scale(1.01); }
         .readonly-field { background-color: #f8f9fa !important; }
@@ -48,151 +96,164 @@
         </div>
 
         <form id="bookingForm">
-            <!-- Part 1: Identification -->
-            <div class="section-title">1. Identificación del Colegio (Busque por RBD, RUT o Ubicación)</div>
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label">RBD (Sin dígito verificador)</label>
-                    <input type="text" id="rbdInput" class="form-control" placeholder="Ej: 1">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">RUT Sostenedor (Sin puntos ni dígito verificador)</label>
-                    <input type="text" id="rutInput" class="form-control" placeholder="Ej: 69010100" required>
-                </div>
-            </div>
-
-            <div class="row g-3 mt-1">
-                <div class="col-md-6">
-                    <label class="form-label">Región</label>
-                    <select id="regionSelect" class="form-select" required>
-                        <option value="">Seleccione Región</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Comuna</label>
-                    <select id="comunaSelect" class="form-select" disabled required>
-                        <option value="">Seleccione Comuna</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row g-3 mt-1">
-                <div class="col-md-12">
-                    <label class="form-label">Buscar y Seleccionar Establecimiento</label>
-                    <div class="input-group mb-1">
-                        <span class="input-group-text">🔍</span>
-                        <input type="text" id="schoolSearch" class="form-control" placeholder="Escriba parte del nombre para filtrar..." disabled>
-                    </div>
-                    <select id="schoolSelect" class="form-select" disabled required>
-                        <option value="">Seleccione el colegio de la lista</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Part 2: Contacto -->
-            <div class="section-title">2. Información de Contacto</div>
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label">Nombre Contacto 1</label>
-                    <input type="text" id="contactName1" class="form-control" required placeholder="Nombre Apellido">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Email 1</label>
-                    <input type="email" id="contactEmail1" class="form-control" required 
-                        pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" 
-                        title="Debe ingresar un correo válido con dominio (ejemplo: contacto@colegio.cl)" 
-                        placeholder="ejemplo@correo.cl">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Teléfono 1</label>
-                    <input type="tel" id="contactPhone1" class="form-control" required 
-                           pattern="^(\+569|9)[0-9]{8}$" placeholder="+56912345678">
-                </div>
-            </div>
-            <div class="row g-3 mt-1">
-                <div class="col-md-4">
-                    <label class="form-label">Nombre Contacto 2</label>
-                    <input type="text" id="contactName2" class="form-control" placeholder="Opcional">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Email 2</label>
-                    <input type="email" id="contactEmail2" class="form-control" 
-                        pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" 
-                        title="Debe ingresar un correo válido con dominio (ejemplo: contacto@colegio.cl)" 
-                        placeholder="segundo@correo.cl">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Teléfono 2</label>
-                    <input type="tel" id="contactPhone2" class="form-control" 
-                           pattern="^(\+569|9)[0-9]{8}$" placeholder="+56912345678">
-                </div>
-            </div>
-
-<!-- Part 3: Visit -->
-            <div class="section-title">3. Detalles de la Visita</div>
             
-            <!-- Row 1: Modalidad & Fecha (50% / 50%) -->
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label">Modalidad</label>
-                    <select id="modalidadSelect" class="form-select" required>
-                        <option value="">Seleccione Modalidad</option>
-                        <option value="Media Jornada">Media Jornada</option>
-                        <option value="Jornada Completa">Jornada Completa</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Fecha disponible</label>
-                    <select id="visitDate" class="form-select" required disabled>
-                        <option value="">Primero seleccione modalidad</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Row 2: Curso, Niños, Adultos (33% / 33% / 33%) -->
-            <div class="row g-3 mt-1">
-                <div class="col-md-4">
-                    <label class="form-label">Curso(s)</label>
-                    <!-- Scrollable Checkbox Container -->
-                    <div class="border rounded p-2 bg-white" style="max-height: 130px; overflow-y: auto; font-size: 0.9rem;">
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="Pre-Kinder" id="chk_prek"><label class="form-check-label" for="chk_prek">Pre-Kinder</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="Kinder" id="chk_kin"><label class="form-check-label" for="chk_kin">Kinder</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="1° Básico" id="chk_1b"><label class="form-check-label" for="chk_1b">1° Básico</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="2° Básico" id="chk_2b"><label class="form-check-label" for="chk_2b">2° Básico</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="3° Básico" id="chk_3b"><label class="form-check-label" for="chk_3b">3° Básico</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="4° Básico" id="chk_4b"><label class="form-check-label" for="chk_4b">4° Básico</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="5° Básico" id="chk_5b"><label class="form-check-label" for="chk_5b">5° Básico</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="6° Básico" id="chk_6b"><label class="form-check-label" for="chk_6b">6° Básico</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="7° Básico" id="chk_7b"><label class="form-check-label" for="chk_7b">7° Básico</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="8° Básico" id="chk_8b"><label class="form-check-label" for="chk_8b">8° Básico</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="1° Medio" id="chk_1m"><label class="form-check-label" for="chk_1m">1° Medio</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="2° Medio" id="chk_2m"><label class="form-check-label" for="chk_2m">2° Medio</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="3° Medio" id="chk_3m"><label class="form-check-label" for="chk_3m">3° Medio</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="4° Medio" id="chk_4m"><label class="form-check-label" for="chk_4m">4° Medio</label></div>
-                        <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="Actividad Extracurricular" id="chk_extra"><label class="form-check-label" for="chk_extra">Actividad Extracurricular</label></div>
+            <!-- Part 1: Identification (Teal Palette) -->
+            <div class="section-box section-id">
+                <div class="section-title">1. Identificación del Colegio</div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">RBD (Sin dígito verificador)</label>
+                        <input type="text" id="rbdInput" class="form-control" placeholder="Ej: 1">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">RUT Sostenedor (Sin puntos ni dígito)</label>
+                        <input type="text" id="rutInput" class="form-control" placeholder="Ej: 69010100">
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">N° de Alumnos</label>
-                    <input type="number" id="kidsCount" class="form-control" min="0" required value="0">
+
+                <div class="row g-3 mt-1">
+                    <div class="col-md-6">
+                        <label class="form-label">Región</label>
+                        <select id="regionSelect" class="form-select">
+                            <option value="">Seleccione Región</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Comuna</label>
+                        <select id="comunaSelect" class="form-select" disabled>
+                            <option value="">Seleccione Comuna</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">N° de Adultos</label>
-                    <input type="number" id="adultsCount" class="form-control" min="0" required value="0">
+
+                <div class="row g-3 mt-1">
+                    <div class="col-md-12">
+                        <label class="form-label">Buscar y Seleccionar Establecimiento</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white">🔍</span>
+                            <input type="text" id="schoolSearch" class="form-control" placeholder="Escriba parte del nombre para filtrar..." disabled>
+                        </div>
+                        <select id="schoolSelect" class="form-select mt-2" disabled required>
+                            <option value="">Seleccione el colegio de la lista</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <!-- Row 3: Alimentación -->
-            <div class="row g-3 mt-3">
-                <div class="col-12">
-                    <div class="p-3 bg-light rounded border">
-                        <label class="form-label text-danger fw-bold d-block border-bottom pb-2 mb-3">Opciones de Alimentación (La suma debe ser igual al total de visitantes)</label>
-                        <div id="mealOptionsContainer" class="row g-3">
-                            <!-- Options will be injected here by JavaScript -->
+            <!-- Part 2: Contacto (Blue Palette) -->
+            <div class="section-box section-contact">
+                <div class="section-title">2. Información de Contacto</div>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Nombre Contacto 1</label>
+                        <input type="text" id="contactName1" class="form-control" required placeholder="Nombre Apellido">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Email 1</label>
+                        <input type="email" id="contactEmail1" class="form-control" required 
+                               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" 
+                               title="Debe ingresar un correo válido con dominio (ej: contacto@colegio.cl)" 
+                               placeholder="ejemplo@correo.cl">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Teléfono 1</label>
+                        <input type="tel" id="contactPhone1" class="form-control" required 
+                               pattern="^(\+569|9)[0-9]{8}$" placeholder="+56912345678">
+                    </div>
+                </div>
+                <div class="row g-3 mt-1">
+                    <div class="col-md-4">
+                        <label class="form-label">Nombre Contacto 2</label>
+                        <input type="text" id="contactName2" class="form-control" placeholder="Opcional">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Email 2</label>
+                        <input type="email" id="contactEmail2" class="form-control" 
+                               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" 
+                               title="Debe ingresar un correo válido" 
+                               placeholder="segundo@correo.cl">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Teléfono 2</label>
+                        <input type="tel" id="contactPhone2" class="form-control" 
+                               pattern="^(\+569|9)[0-9]{8}$" placeholder="+56912345678">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part 3: Visit (Lime/Green Palette) -->
+            <div class="section-box section-visit">
+                <div class="section-title">3. Detalles de la Visita</div>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Modalidad</label>
+                        <select id="modalidadSelect" class="form-select" required>
+                            <option value="">Seleccione Modalidad</option>
+                            <option value="Media Jornada">Media Jornada</option>
+                            <option value="Jornada Completa">Jornada Completa</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Fecha disponible</label>
+                        <select id="visitDate" class="form-select" required disabled>
+                            <option value="">Primero seleccione modalidad</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-1">
+                    <div class="col-md-4">
+                        <label class="form-label">Curso(s)</label>
+                        <div class="border rounded p-2 bg-white" style="max-height: 130px; overflow-y: auto; font-size: 0.9rem;">
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="Pre-Kinder" id="chk_prek"><label class="form-check-label" for="chk_prek">Pre-Kinder</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="Kinder" id="chk_kin"><label class="form-check-label" for="chk_kin">Kinder</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="1° Básico" id="chk_1b"><label class="form-check-label" for="chk_1b">1° Básico</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="2° Básico" id="chk_2b"><label class="form-check-label" for="chk_2b">2° Básico</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="3° Básico" id="chk_3b"><label class="form-check-label" for="chk_3b">3° Básico</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="4° Básico" id="chk_4b"><label class="form-check-label" for="chk_4b">4° Básico</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="5° Básico" id="chk_5b"><label class="form-check-label" for="chk_5b">5° Básico</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="6° Básico" id="chk_6b"><label class="form-check-label" for="chk_6b">6° Básico</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="7° Básico" id="chk_7b"><label class="form-check-label" for="chk_7b">7° Básico</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="8° Básico" id="chk_8b"><label class="form-check-label" for="chk_8b">8° Básico</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="1° Medio" id="chk_1m"><label class="form-check-label" for="chk_1m">1° Medio</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="2° Medio" id="chk_2m"><label class="form-check-label" for="chk_2m">2° Medio</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="3° Medio" id="chk_3m"><label class="form-check-label" for="chk_3m">3° Medio</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="4° Medio" id="chk_4m"><label class="form-check-label" for="chk_4m">4° Medio</label></div>
+                            <div class="form-check"><input class="form-check-input curso-checkbox" type="checkbox" value="Actividad Extracurricular" id="chk_extra"><label class="form-check-label" for="chk_extra">Actividad Extracurricular</label></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">N° de Alumnos</label>
+                        <input type="number" id="kidsCount" class="form-control" min="0" required value="0">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">N° de Adultos</label>
+                        <input type="number" id="adultsCount" class="form-control" min="0" required value="0">
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-12">
+                        <div class="p-3 bg-light rounded border border-success border-opacity-25">
+                            <label class="form-label d-block border-bottom border-success border-opacity-25 pb-2 mb-3" style="color: #b32525;">
+                                ⚠️ Opciones de Alimentación (La suma debe ser igual al total de visitantes)
+                            </label>
+                            <div id="mealOptionsContainer" class="row g-3">
+                                <!-- Options will be injected here by JavaScript -->
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- reCAPTCHA Widget -->
+            <div class="d-flex justify-content-center mt-2">
+                <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-4 shadow-sm">ENVIAR SOLICITUD DE RESERVA</button>
+        </form>
 
             <!-- reCAPTCHA Widget -->
             <div class="d-flex justify-content-center mt-4">
