@@ -146,24 +146,24 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">RBD (Sin dígito verificador)</label>
-                        <input type="text" id="rbdInput" class="form-control" placeholder="Ej: 1">
+                        <input type="text" id="rbdInput" class="form-control" placeholder="Ej: 1" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">RUT Sostenedor (Sin puntos ni dígito)</label>
-                        <input type="text" id="rutInput" class="form-control" placeholder="Ej: 69010100">
+                        <input type="text" id="rutInput" class="form-control" placeholder="Ej: 69010100" required>
                     </div>
                 </div>
 
                 <div class="row g-3 mt-1">
                     <div class="col-md-6">
                         <label class="form-label">Región</label>
-                        <select id="regionSelect" class="form-select">
+                        <select id="regionSelect" class="form-select" required>
                             <option value="">Seleccione Región</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Comuna</label>
-                        <select id="comunaSelect" class="form-select" disabled>
+                        <select id="comunaSelect" class="form-select" required disabled>
                             <option value="">Seleccione Comuna</option>
                         </select>
                     </div>
@@ -176,7 +176,7 @@
                             <span class="input-group-text bg-white">🔍</span>
                             <input type="text" id="schoolSearch" class="form-control" placeholder="Escriba parte del nombre para filtrar..." disabled>
                         </div>
-                        <select id="schoolSelect" class="form-select mt-2" disabled required>
+                        <select id="schoolSelect" class="form-select mt-2" required disabled>
                             <option value="">Seleccione el colegio de la lista</option>
                         </select>
                     </div>
