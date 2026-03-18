@@ -92,6 +92,41 @@
         }
         .btn-primary:hover { background: #b31217; transform: scale(1.01); }
         .readonly-field { background-color: #f8f9fa !important; }
+
+/* --- MOBILE RESPONSIVE OPTIMIZATIONS --- */
+        @media (max-width: 768px) {
+            /* 1. Remove the wide background space outside the card */
+            body { 
+                padding: 10px 5px; 
+            }
+            
+            /* 2. Remove the heavy padding inside the white card */
+            .booking-card { 
+                padding: 25px 15px; 
+                border-radius: 12px; 
+            }
+            
+            /* 3. Stretch the colored sections to the edges */
+            .section-box { 
+                padding: 15px 12px; 
+                margin-bottom: 25px;
+                border-left-width: 5px; /* Make the colored line slightly thinner */
+            }
+            
+            /* 4. Adjust font sizes slightly to prevent awkward line breaks */
+            .section-title { 
+                font-size: 1.1rem; 
+                padding-bottom: 8px;
+            }
+            .form-label {
+                font-size: 0.9rem;
+            }
+            
+            /* 5. Ensure the Meal Options box also stretches out */
+            .section-visit .bg-light {
+                padding: 15px 10px !important;
+            }
+        }
     </style>
 </head>
 <body>
