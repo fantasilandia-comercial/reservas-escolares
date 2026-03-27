@@ -32,9 +32,6 @@ function getUpcomingWeekends(limitDateStr) {
 availableDates["Fin de Semana"] = getUpcomingWeekends("2026-10-25");
 
 
-// Inyectamos los fines de semana al objeto
-availableDates["Fin de Semana"] = getRemainingWeekends();
-
 // Dynamic Menu Options
 const mealOptions =[
     { id: "meal_burger", name: "Combo Burger y Papas" },
