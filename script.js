@@ -61,7 +61,7 @@ tipoVisitaRadios.forEach(radio => {
             // Restaurar opciones originales
             modalidadSelect.innerHTML += '<option value="Media Jornada">Media Jornada</option>';
             modalidadSelect.innerHTML += '<option value="Jornada Completa">Jornada Completa</option>';
-            
+            modalidadSelect.disabled = false;
             // Bloquear fechas hasta que elija modalidad
             dateSelect.innerHTML = '<option value="">Primero seleccione modalidad</option>';
             dateSelect.disabled = true;
@@ -70,7 +70,7 @@ tipoVisitaRadios.forEach(radio => {
             // Dejar solo la opción Fin de Semana
             modalidadSelect.innerHTML += '<option value="Fin de Semana">Fin de Semana</option>';
             modalidadSelect.value = "Fin de Semana"; // Auto-seleccionarlo
-            
+            modalidadSelect.disabled = true;
             // Disparar el evento 'change' existente para que las fechas se llenen automáticamente
             modalidadSelect.dispatchEvent(new Event('change'));
         }
