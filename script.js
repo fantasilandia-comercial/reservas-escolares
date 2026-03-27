@@ -340,6 +340,15 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
         Alimentacion: mealSummaryArray.join(" | ") 
     };
 
+    // --- NUEVO: Inyectar las opciones individuales dinámicamente ---
+    // Esto creará variables en el JSON usando el 'id' de cada opción (ej: "meal_burger": 15)
+    mealOptions.forEach(meal => {
+        const qty = parseInt(document.getElementById(meal.id).value) || 0;
+        payload[meal.id] = qty; 
+    });
+
+
+
     // 4. Parameters required by your EmailJS Template
     const templateParams = {
         school_name: payload.Colegio,
