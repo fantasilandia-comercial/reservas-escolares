@@ -31,7 +31,6 @@ function getUpcomingWeekends(limitDateStr) {
 // Inyectamos solo los fines de semana futuros hasta el 25 de octubre
 availableDates["Fin de Semana"] = getUpcomingWeekends("2026-10-25");
 
-console.log(availableDates);
 
 // Inyectamos los fines de semana al objeto
 availableDates["Fin de Semana"] = getRemainingWeekends();
