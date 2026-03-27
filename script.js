@@ -1,18 +1,21 @@
-let schoolsDatabase =[];
+let schoolsDatabase = [];
 const availableDates = {
-    "Media Jornada":["2026-11-26", "2026-12-03", "2026-12-04", "2026-12-16"],
-    "Jornada Completa":["2026-10-29", "2026-11-16", "2026-11-23", "2026-11-24", "2026-11-30", "2026-12-01", "2026-12-09", "2026-12-21", "2026-12-22"],
-    "Fin de Semana":[] // Lo llenaremos dinámicamente a continuación
+    "Media Jornada": ["2026-11-26", "2026-12-03", "2026-12-04", "2026-12-16"],
+    "Jornada Completa": ["2026-10-29", "2026-11-16", "2026-11-23", "2026-11-24", "2026-11-30", "2026-12-01", "2026-12-09", "2026-12-21", "2026-12-22"],
+    "Fin de Semana": [] // Lo llenaremos dinámicamente a continuación
 };
 
-// NUEVO: Función para calcular todos los fines de semana restantes del año
-function getRemainingWeekends() {
-    const weekends =[];
+// NUEVO: Función para calcular los fines de semana futuros hasta una fecha límite
+function getUpcomingWeekends(limitDateStr) {
+    const weekends = [];
     const today = new Date(); 
-    const currentYear = today.getFullYear();
+    // Ajustamos la fecha de hoy para ignorar horas/minutos
+    today.setHours(0, 0, 0, 0);
+
+    const limitDate = new Date(limitDateStr);
     let date = new Date(today);
 
-    while (date.getFullYear() === currentYear) {
+    while (date <= limitDate) {
         const day = date.getDay();
         if (day === 0 || day === 6) { // 0 = Domingo, 6 = Sábado
             const yyyy = date.getFullYear();
@@ -24,6 +27,11 @@ function getRemainingWeekends() {
     }
     return weekends;
 }
+
+// Inyectamos solo los fines de semana futuros hasta el 25 de octubre
+availableDates["Fin de Semana"] = getUpcomingWeekends("2026-10-25");
+
+console.log(availableDates);
 
 // Inyectamos los fines de semana al objeto
 availableDates["Fin de Semana"] = getRemainingWeekends();
@@ -57,7 +65,7 @@ tipoVisitaRadios.forEach(radio => {
         const tipo = e.target.value;
         modalidadSelect.innerHTML = '<option value="">Seleccione Modalidad</option>';
         
-        if (tipo === "Paseo de Curso") {
+        if (tipo === "Paseo Fin de Año") {
             // Restaurar opciones originales
             modalidadSelect.innerHTML += '<option value="Media Jornada">Media Jornada</option>';
             modalidadSelect.innerHTML += '<option value="Jornada Completa">Jornada Completa</option>';
