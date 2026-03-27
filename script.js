@@ -1,9 +1,32 @@
-let schoolsDatabase = [];
+let schoolsDatabase =[];
 const availableDates = {
-    "Media Jornada": ["2026-11-26", "2026-12-03", "2026-12-04", "2026-12-16"],
-    "Jornada Completa": ["2026-10-29", "2026-11-16", "2026-11-23",
-                        "2026-11-24", "2026-11-30", "2026-12-01", "2026-12-09", "2026-12-21", "2026-12-22"]
-    };
+    "Media Jornada":["2026-11-26", "2026-12-03", "2026-12-04", "2026-12-16"],
+    "Jornada Completa":["2026-10-29", "2026-11-16", "2026-11-23", "2026-11-24", "2026-11-30", "2026-12-01", "2026-12-09", "2026-12-21", "2026-12-22"],
+    "Fin de Semana":[] // Lo llenaremos dinámicamente a continuación
+};
+
+// NUEVO: Función para calcular todos los fines de semana restantes del año
+function getRemainingWeekends() {
+    const weekends =[];
+    const today = new Date(); 
+    const currentYear = today.getFullYear();
+    let date = new Date(today);
+
+    while (date.getFullYear() === currentYear) {
+        const day = date.getDay();
+        if (day === 0 || day === 6) { // 0 = Domingo, 6 = Sábado
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            weekends.push(`${yyyy}-${mm}-${dd}`);
+        }
+        date.setDate(date.getDate() + 1);
+    }
+    return weekends;
+}
+
+// Inyectamos los fines de semana al objeto
+availableDates["Fin de Semana"] = getRemainingWeekends();
 
 // Dynamic Menu Options
 const mealOptions =[
@@ -25,6 +48,35 @@ const schoolSearch = document.getElementById('schoolSearch');
 const schoolSelect = document.getElementById('schoolSelect');
 const dateSelect = document.getElementById('visitDate');
 const modalidadSelect = document.getElementById('modalidadSelect');
+
+// Escuchar cambios entre Paseo de Curso / Fin de Semana
+const tipoVisitaRadios = document.querySelectorAll('input[name="tipoVisita"]');
+
+tipoVisitaRadios.forEach(radio => {
+    radio.addEventListener('change', (e) => {
+        const tipo = e.target.value;
+        modalidadSelect.innerHTML = '<option value="">Seleccione Modalidad</option>';
+        
+        if (tipo === "Paseo de Curso") {
+            // Restaurar opciones originales
+            modalidadSelect.innerHTML += '<option value="Media Jornada">Media Jornada</option>';
+            modalidadSelect.innerHTML += '<option value="Jornada Completa">Jornada Completa</option>';
+            
+            // Bloquear fechas hasta que elija modalidad
+            dateSelect.innerHTML = '<option value="">Primero seleccione modalidad</option>';
+            dateSelect.disabled = true;
+            
+        } else if (tipo === "Fin de Semana") {
+            // Dejar solo la opción Fin de Semana
+            modalidadSelect.innerHTML += '<option value="Fin de Semana">Fin de Semana</option>';
+            modalidadSelect.value = "Fin de Semana"; // Auto-seleccionarlo
+            
+            // Disparar el evento 'change' existente para que las fechas se llenen automáticamente
+            modalidadSelect.dispatchEvent(new Event('change'));
+        }
+    });
+});
+
 
 // 1. Init
 fetch('schools.json')
