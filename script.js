@@ -283,9 +283,7 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     mealOptions.forEach(meal => {
         const qty = parseInt(document.getElementById(meal.id).value) || 0;
         totalMeals += qty;
-        if (qty > 0) {
-            mealSummaryArray.push(`${meal.name}: ${qty}`);
-        }
+        mealSummaryArray.push(`${meal.name}: ${qty}`);
     });
 
     // Stop the form if the numbers don't match
