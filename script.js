@@ -47,6 +47,7 @@ function getDateRange(startStr, endStr) {
 
 const extraDates = [
     "2026-04-30",
+    "2026-05-01",
     ...getDateRange("2026-06-22", "2026-07-03")
 ];
 
