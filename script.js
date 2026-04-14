@@ -31,6 +31,11 @@ function getUpcomingWeekends(limitDateStr) {
 // Inyectamos solo los fines de semana futuros hasta el 25 de octubre
 availableDates["Fin de Semana"] = getUpcomingWeekends("2026-10-25");
 
+// Add custom date (YYYY-MM-DD format)
+availableDates["Fin de Semana"].push("2026-04-30");
+
+// Optional: sort dates to keep chronological order
+availableDates["Fin de Semana"].sort();
 
 // Dynamic Menu Options
 const mealOptions =[
