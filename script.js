@@ -28,14 +28,34 @@ function getUpcomingWeekends(limitDateStr) {
     return weekends;
 }
 
-// Inyectamos solo los fines de semana futuros hasta el 25 de octubre
-availableDates["Fin de Semana"] = getUpcomingWeekends("2026-10-25");
+function getDateRange(startStr, endStr) {
+    const dates = [];
+    const start = new Date(startStr);
+    const end = new Date(endStr);
+    let date = new Date(start);
 
-// Add custom date (YYYY-MM-DD format)
-availableDates["Fin de Semana"].push("2026-04-30");
+    while (date <= end) {
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        dates.push(`${yyyy}-${mm}-${dd}`);
+        date.setDate(date.getDate() + 1);
+    }
 
-// Optional: sort dates to keep chronological order
-availableDates["Fin de Semana"].sort();
+    return dates;
+}
+
+const extraDates = [
+    "2026-04-30",
+    ...getDateRange("2026-06-22", "2026-07-03")
+];
+
+availableDates["Fin de Semana"] = [
+    ...new Set([
+        ...getUpcomingWeekends("2026-10-25"),
+        ...extraDates
+    ])
+].sort();
 
 // Dynamic Menu Options
 const mealOptions =[
