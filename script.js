@@ -5,14 +5,14 @@ const availableDates = {
     "Fin de Semana": [] // Lo llenaremos dinámicamente a continuación
 };
 
-// NUEVO: Función para calcular los fines de semana futuros hasta una fecha límite
+// Función para calcular los fines de semana futuros hasta una fecha límite
 function getUpcomingWeekends(limitDateStr) {
     const weekends = [];
     const today = new Date(); 
-    // Ajustamos la fecha de hoy para ignorar horas/minutos
     today.setHours(0, 0, 0, 0);
 
-    const limitDate = new Date(limitDateStr);
+    // FIX: Agregamos T00:00:00 para evitar desfase por zona horaria
+    const limitDate = new Date(limitDateStr + "T00:00:00");
     let date = new Date(today);
 
     while (date <= limitDate) {
@@ -28,10 +28,12 @@ function getUpcomingWeekends(limitDateStr) {
     return weekends;
 }
 
+// Función para generar rangos de fechas
 function getDateRange(startStr, endStr) {
     const dates = [];
-    const start = new Date(startStr);
-    const end = new Date(endStr);
+    // FIX: Agregamos T00:00:00 para evitar que el navegador reste un día por UTC
+    const start = new Date(startStr + "T00:00:00");
+    const end = new Date(endStr + "T00:00:00");
     let date = new Date(start);
 
     while (date <= end) {
@@ -45,13 +47,14 @@ function getDateRange(startStr, endStr) {
     return dates;
 }
 
-// CAMBIO REALIZADO AQUÍ: Rango actualizado del 18 de junio al 05 de julio
+// Fechas adicionales para Fin de Semana
 const extraDates = [
     "2026-04-30",
     "2026-05-01",
-    ...getDateRange("2026-06-18", "2026-07-05")
+    ...getDateRange("2026-06-18", "2026-07-05") // Nuevo rango solicitado
 ];
 
+// Llenado de fechas para Fin de Semana
 availableDates["Fin de Semana"] = [
     ...new Set([
         ...getUpcomingWeekends("2026-10-25"),
@@ -89,20 +92,16 @@ tipoVisitaRadios.forEach(radio => {
         modalidadSelect.innerHTML = '<option value="">Seleccione Modalidad</option>';
         
         if (tipo === "Paseo Fin de Año") {
-            // Restaurar opciones originales
             modalidadSelect.innerHTML += '<option value="Media Jornada">Media Jornada</option>';
             modalidadSelect.innerHTML += '<option value="Jornada Completa">Jornada Completa</option>';
             modalidadSelect.disabled = false;
-            // Bloquear fechas hasta que elija modalidad
             dateSelect.innerHTML = '<option value="">Primero seleccione modalidad</option>';
             dateSelect.disabled = true;
             
         } else if (tipo === "Fin de Semana") {
-            // Dejar solo la opción Fin de Semana
             modalidadSelect.innerHTML += '<option value="Fin de Semana">Fin de Semana</option>';
-            modalidadSelect.value = "Fin de Semana"; // Auto-seleccionarlo
+            modalidadSelect.value = "Fin de Semana"; 
             modalidadSelect.disabled = true;
-            // Disparar el evento 'change' existente para que las fechas se llenen automáticamente
             modalidadSelect.dispatchEvent(new Event('change'));
         }
     });
@@ -118,8 +117,6 @@ fetch('schools.json')
     });
 
 function initForm() {
-
-    // Regions
     const regions = [...new Set(schoolsDatabase.map(s => s.NOM_REG_RBD_A))].sort();
     regionSelect.innerHTML = '<option value="">Seleccione Región</option>';
     regions.forEach(reg => {
@@ -128,7 +125,6 @@ function initForm() {
         regionSelect.appendChild(opt);
     });
 
-    // Render Meal Options dynamically
     mealContainer.innerHTML = '';
     mealOptions.forEach(meal => {
         const col = document.createElement('div');
@@ -203,7 +199,6 @@ comunaSelect.addEventListener('change', () => {
 });
 
 // Cascade: Modalidad -> Fecha
-
 modalidadSelect.addEventListener('change', (e) => {
     const modalidad = e.target.value;
     dateSelect.innerHTML = '<option value="">Seleccione una fecha</option>';
@@ -225,7 +220,6 @@ modalidadSelect.addEventListener('change', (e) => {
         dateSelect.innerHTML = '<option value="">Primero seleccione modalidad</option>';
     }
 });
-
 
 // 6. Search Name (Contains)
 schoolSearch.addEventListener('input', (e) => {
@@ -297,12 +291,10 @@ function resetCascading() {
     rutInput.value = "";
 }
 
-// Form Submission
 // Form Submission via EmailJS
 document.getElementById('bookingForm').addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // -- NEW MATH VALIDATION --
     const kids = parseInt(document.getElementById('kidsCount').value) || 0;
     const adults = parseInt(document.getElementById('adultsCount').value) || 0;
     const totalVisitors = kids + adults;
@@ -310,22 +302,18 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     let totalMeals = 0;
     let mealSummaryArray =[];
     
-    // Loop through our dynamic options to calculate totals
     mealOptions.forEach(meal => {
         const qty = parseInt(document.getElementById(meal.id).value) || 0;
         totalMeals += qty;
         mealSummaryArray.push(`${meal.name}: ${qty}`);
     });
 
-    // Stop the form if the numbers don't match
     if (totalMeals !== totalVisitors) {
         alert(`Error: Tienes ${totalVisitors} visitantes en total, pero has asignado ${totalMeals} opciones de alimentación. Los números deben coincidir.`);
         return;
     }
     
-    // -- EXTRACT MULTIPLE COURSES --
     const checkedBoxes = document.querySelectorAll('.curso-checkbox:checked');   
-    // Extract their values and join them with a comma
     const selectedCursos = Array.from(checkedBoxes).map(cb => cb.value).join(", ");
     
     if (selectedCursos === "") {
@@ -333,20 +321,17 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
         return;
     }
 
-    // 1. Check if reCAPTCHA is completed
     const recaptchaResponse = grecaptcha.getResponse();
     if (!recaptchaResponse) {
         alert("Por favor, confirme que no es un robot marcando la casilla de reCAPTCHA.");
         return;
     }
 
-    // 2. Disable button to prevent double-clicks
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.disabled = true;
     submitBtn.textContent = "ENVIANDO SOLICITUD...";
 
-    // 3. Gather and structure all data into a JSON object
     const payload = {
         RBD: document.getElementById('rbdInput').value,
         RUT: document.getElementById('rutInput').value,
@@ -367,41 +352,30 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
         Alimentacion: mealSummaryArray.join(" | ") 
     };
 
-    // --- NUEVO: Inyectar las opciones individuales dinámicamente ---
-    // Esto creará variables en el JSON usando el 'id' de cada opción (ej: "meal_burger": 15)
     mealOptions.forEach(meal => {
         const qty = parseInt(document.getElementById(meal.id).value) || 0;
         payload[meal.id] = qty; 
     });
 
-
-
-    // 4. Parameters required by your EmailJS Template
     const templateParams = {
         school_name: payload.Colegio,
         reply_to: payload.Contacto1_Email,
-        json_payload: JSON.stringify(payload, null, 2), // Converts object to formatted JSON string
-        "g-recaptcha-response": recaptchaResponse       // Required by EmailJS to validate the token securely
+        json_payload: JSON.stringify(payload, null, 2),
+        "g-recaptcha-response": recaptchaResponse
     };
 
-    // 5. Send via EmailJS
-    // REPLACE THESE TWO STRINGS WITH YOUR ACTUAL IDs
     emailjs.send('service_ygicx87', 'template_mtbk1wg', templateParams)
         .then(function(response) {
             alert('¡Reserva enviada con éxito! El departamento comercial la evaluará.');
-            
-            // Clean up the form after successful submission
             document.getElementById('bookingForm').reset();
             resetCascading();
-            grecaptcha.reset(); // Reset the reCAPTCHA widget
-            
+            grecaptcha.reset(); 
             submitBtn.disabled = false;
             submitBtn.textContent = originalText;
         }, function(error) {
             console.error("EmailJS Error:", error);
             alert('Hubo un error al enviar la reserva. Por favor, intente nuevamente.');
-            
-            grecaptcha.reset(); // Reset the reCAPTCHA widget even if it fails
+            grecaptcha.reset(); 
             submitBtn.disabled = false;
             submitBtn.textContent = originalText;
         });
