@@ -1,19 +1,29 @@
 let schoolsDatabase = [];
+
+// Get today's date at midnight for comparison
+const todayMidnight = new Date();
+todayMidnight.setHours(0, 0, 0, 0);
+
+// Helper function to filter out past dates
+function filterPastDates(dateArray) {
+    return dateArray.filter(dateStr => {
+        const dateObj = new Date(dateStr + "T00:00:00");
+        return dateObj >= todayMidnight;
+    });
+}
+
 const availableDates = {
-    "Media Jornada": ["2026-11-26", "2026-12-03", "2026-12-04", "2026-12-16"],
-    "Jornada Completa": ["2026-10-29", "2026-11-16", "2026-11-23", "2026-11-24", "2026-11-30", "2026-12-01", "2026-12-09", "2026-12-21", "2026-12-22"],
-    "Fin de Semana": [] // Lo llenaremos dinámicamente a continuación
+    // We apply the filter immediately to hardcoded arrays
+    "Media Jornada": filterPastDates(["2026-11-26", "2026-12-03", "2026-12-04", "2026-12-16"]),
+    "Jornada Completa": filterPastDates(["2026-10-29", "2026-11-16", "2026-11-23", "2026-11-24", "2026-11-30", "2026-12-01", "2026-12-09", "2026-12-21", "2026-12-22"]),
+    "Fin de Semana": [] 
 };
 
 // Función para calcular los fines de semana futuros hasta una fecha límite
 function getUpcomingWeekends(limitDateStr) {
     const weekends = [];
-    const today = new Date(); 
-    today.setHours(0, 0, 0, 0);
-
-    // FIX: Agregamos T00:00:00 para evitar desfase por zona horaria
     const limitDate = new Date(limitDateStr + "T00:00:00");
-    let date = new Date(today);
+    let date = new Date(todayMidnight); // Start from today
 
     while (date <= limitDate) {
         const day = date.getDay();
@@ -31,7 +41,6 @@ function getUpcomingWeekends(limitDateStr) {
 // Función para generar rangos de fechas
 function getDateRange(startStr, endStr) {
     const dates = [];
-    // FIX: Agregamos T00:00:00 para evitar que el navegador reste un día por UTC
     const start = new Date(startStr + "T00:00:00");
     const end = new Date(endStr + "T00:00:00");
     let date = new Date(start);
@@ -43,7 +52,6 @@ function getDateRange(startStr, endStr) {
         dates.push(`${yyyy}-${mm}-${dd}`);
         date.setDate(date.getDate() + 1);
     }
-
     return dates;
 }
 
@@ -51,18 +59,19 @@ function getDateRange(startStr, endStr) {
 const extraDates = [
     "2026-04-30",
     "2026-05-01",
-    ...getDateRange("2026-06-18", "2026-07-05") // Nuevo rango solicitado
+    ...getDateRange("2026-06-18", "2026-07-05")
 ];
 
-// Llenado de fechas para Fin de Semana
-availableDates["Fin de Semana"] = [
+// Llenado de fechas para Fin de Semana + Filtro de fechas pasadas
+availableDates["Fin de Semana"] = filterPastDates([
     ...new Set([
         ...getUpcomingWeekends("2026-10-25"),
         ...extraDates
     ])
-].sort();
+]).sort();
 
-// Dynamic Menu Options
+// --- REST OF THE DYNAMIC LOGIC ---
+
 const mealOptions =[
     { id: "meal_burger", name: "Combo Burger y Papas" },
     { id: "meal_pizza", name: "Combo Pizza" },
@@ -70,10 +79,7 @@ const mealOptions =[
     { id: "meal_none", name: "Solo Entrada" }
 ];
 
-// Reference to the new container
 const mealContainer = document.getElementById('mealOptionsContainer');
-
-// Elements
 const rbdInput = document.getElementById('rbdInput');
 const rutInput = document.getElementById('rutInput');
 const regionSelect = document.getElementById('regionSelect');
@@ -82,22 +88,18 @@ const schoolSearch = document.getElementById('schoolSearch');
 const schoolSelect = document.getElementById('schoolSelect');
 const dateSelect = document.getElementById('visitDate');
 const modalidadSelect = document.getElementById('modalidadSelect');
-
-// Escuchar cambios entre Paseo de Curso / Fin de Semana
 const tipoVisitaRadios = document.querySelectorAll('input[name="tipoVisita"]');
 
 tipoVisitaRadios.forEach(radio => {
     radio.addEventListener('change', (e) => {
         const tipo = e.target.value;
         modalidadSelect.innerHTML = '<option value="">Seleccione Modalidad</option>';
-        
         if (tipo === "Paseo Fin de Año") {
             modalidadSelect.innerHTML += '<option value="Media Jornada">Media Jornada</option>';
             modalidadSelect.innerHTML += '<option value="Jornada Completa">Jornada Completa</option>';
             modalidadSelect.disabled = false;
             dateSelect.innerHTML = '<option value="">Primero seleccione modalidad</option>';
             dateSelect.disabled = true;
-            
         } else if (tipo === "Fin de Semana") {
             modalidadSelect.innerHTML += '<option value="Fin de Semana">Fin de Semana</option>';
             modalidadSelect.value = "Fin de Semana"; 
@@ -107,8 +109,6 @@ tipoVisitaRadios.forEach(radio => {
     });
 });
 
-
-// 1. Init
 fetch('schools.json')
     .then(res => res.json())
     .then(data => {
@@ -137,7 +137,6 @@ function initForm() {
     });
 }
 
-// 2. Search by RBD
 rbdInput.addEventListener('input', (e) => {
     const val = e.target.value.trim();
     if (val === "") return;
@@ -145,11 +144,9 @@ rbdInput.addEventListener('input', (e) => {
     if (school) fillFullForm(school);
 });
 
-// 3. Search by RUT
 rutInput.addEventListener('input', (e) => {
     const val = e.target.value.trim();
     if (val === "") { initForm(); return; }
-
     const matches = schoolsDatabase.filter(s => s.RUT == val);
     if (matches.length > 0) {
         const rutRegions = [...new Set(matches.map(s => s.NOM_REG_RBD_A))].sort();
@@ -159,7 +156,6 @@ rutInput.addEventListener('input', (e) => {
             opt.value = reg; opt.textContent = reg;
             regionSelect.appendChild(opt);
         });
-
         if (rutRegions.length === 1) {
             regionSelect.value = rutRegions[0];
             updateComunaList(rutRegions[0], val);
@@ -168,48 +164,38 @@ rutInput.addEventListener('input', (e) => {
     }
 });
 
-// 4. Cascade: Region
 regionSelect.addEventListener('change', () => {
     const region = regionSelect.value;
     const rut = rutInput.value.trim();
     if (!region) { resetCascading(); return; }
-    
     updateComunaList(region, rut);
     comunaSelect.disabled = false;
     schoolSearch.disabled = true;
     schoolSelect.disabled = true;
 });
 
-// 5. Cascade: Comuna
 comunaSelect.addEventListener('change', () => {
     const region = regionSelect.value;
     const comuna = comunaSelect.value;
     const rut = rutInput.value.trim();
-    
     if (comuna) {
         schoolSearch.disabled = false;
         schoolSelect.disabled = false;
         schoolSearch.value = "";
-        
         let filtered = schoolsDatabase.filter(s => s.NOM_REG_RBD_A === region && s.NOM_COM_RBD === comuna);
         if (rut !== "") filtered = filtered.filter(s => s.RUT == rut);
-        
         updateSchoolList(filtered);
     }
 });
 
-// Cascade: Modalidad -> Fecha
 modalidadSelect.addEventListener('change', (e) => {
     const modalidad = e.target.value;
     dateSelect.innerHTML = '<option value="">Seleccione una fecha</option>';
-    
     if (modalidad && availableDates[modalidad]) {
         dateSelect.disabled = false;
-        
         availableDates[modalidad].forEach(date => {
             const opt = document.createElement('option');
             opt.value = date;
-            // The "T00:00:00" prevents the timezone from shifting the day backwards
             opt.textContent = new Date(date + "T00:00:00").toLocaleDateString('es-CL', { 
                 weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' 
             });
@@ -221,24 +207,20 @@ modalidadSelect.addEventListener('change', (e) => {
     }
 });
 
-// 6. Search Name (Contains)
 schoolSearch.addEventListener('input', (e) => {
     const term = e.target.value.toLowerCase();
     const region = regionSelect.value;
     const comuna = comunaSelect.value;
     const rut = rutInput.value.trim();
-
     let filtered = schoolsDatabase.filter(s => 
         s.NOM_REG_RBD_A === region && 
         s.NOM_COM_RBD === comuna &&
         s.NOM_RBD.toLowerCase().includes(term)
     );
     if (rut !== "") filtered = filtered.filter(s => s.RUT == rut);
-    
     updateSchoolList(filtered);
 });
 
-// 7. Final Selection
 schoolSelect.addEventListener('change', () => {
     const school = schoolsDatabase.find(s => s.NOM_RBD === schoolSelect.value && s.NOM_COM_RBD === comunaSelect.value);
     if (school) {
@@ -247,7 +229,6 @@ schoolSelect.addEventListener('change', () => {
     }
 });
 
-// Helpers
 function fillFullForm(school) {
     rbdInput.value = school.RBD;
     rutInput.value = school.RUT;
@@ -264,7 +245,6 @@ function fillFullForm(school) {
 function updateComunaList(regionName, rutFilter = "") {
     let list = schoolsDatabase.filter(s => s.NOM_REG_RBD_A === regionName);
     if (rutFilter !== "") list = list.filter(s => s.RUT == rutFilter);
-    
     const comunas = [...new Set(list.map(s => s.NOM_COM_RBD))].sort();
     comunaSelect.innerHTML = '<option value="">Seleccione Comuna</option>';
     comunas.forEach(c => {
@@ -291,14 +271,11 @@ function resetCascading() {
     rutInput.value = "";
 }
 
-// Form Submission via EmailJS
 document.getElementById('bookingForm').addEventListener('submit', (e) => {
     e.preventDefault();
-
     const kids = parseInt(document.getElementById('kidsCount').value) || 0;
     const adults = parseInt(document.getElementById('adultsCount').value) || 0;
     const totalVisitors = kids + adults;
-
     let totalMeals = 0;
     let mealSummaryArray =[];
     
@@ -315,7 +292,6 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     
     const checkedBoxes = document.querySelectorAll('.curso-checkbox:checked');   
     const selectedCursos = Array.from(checkedBoxes).map(cb => cb.value).join(", ");
-    
     if (selectedCursos === "") {
         alert("Por favor seleccione al menos un curso o nivel.");
         return;
