@@ -45,10 +45,11 @@ function getDateRange(startStr, endStr) {
     return dates;
 }
 
+// CAMBIO REALIZADO AQUÍ: Rango actualizado del 18 de junio al 05 de julio
 const extraDates = [
     "2026-04-30",
     "2026-05-01",
-    ...getDateRange("2026-06-22", "2026-07-03")
+    ...getDateRange("2026-06-18", "2026-07-05")
 ];
 
 availableDates["Fin de Semana"] = [
