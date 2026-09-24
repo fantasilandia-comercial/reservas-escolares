@@ -27,7 +27,8 @@ function getUpcomingWeekends(limitDateStr) {
 
     while (date <= limitDate) {
         const day = date.getDay();
-        if (day === 0 || day === 6) { // 0 = Domingo, 6 = Sábado
+        const isOctoberSaturday = day === 6 && date.getMonth() === 9; // 9 = Octubre
+        if ((day === 0 || day === 6) && !isOctoberSaturday) { // 0 = Domingo, 6 = Sábado; excluye sábados de octubre
             const yyyy = date.getFullYear();
             const mm = String(date.getMonth() + 1).padStart(2, '0');
             const dd = String(date.getDate()).padStart(2, '0');
