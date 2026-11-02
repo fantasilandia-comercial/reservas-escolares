@@ -14,7 +14,7 @@ function filterPastDates(dateArray) {
 
 const availableDates = {
     // We apply the filter immediately to hardcoded arrays
-    "Media Jornada": filterPastDates(["2026-11-26", "2026-12-03", "2026-12-04", "2026-12-16"]),
+    "Media Jornada": filterPastDates(["2026-12-04"]),
     "Jornada Completa": filterPastDates(["2026-11-16", "2026-11-23", "2026-11-24", "2026-11-30", "2026-12-01", "2026-12-21", "2026-12-22"]),
     "Fin de Semana": [] 
 };
